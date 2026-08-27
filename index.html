@@ -21,7 +21,7 @@
             flex-direction: column;
         }
 
-        /* Navbar */
+        /* Header / Navbar */
         header {
             background-color: #1e293b;
             padding: 1rem 2rem;
@@ -33,8 +33,357 @@
         }
 
         .logo {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #38bdf8;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            letter-spacing: 0.5px;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        nav a, nav button {
+            color: #94a3b8;
+            text-decoration: none;
+            background: none;
+            border: none;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        nav a:hover, nav button:hover {
+            color: #38bdf8;
+        }
+
+        .btn-store {
+            background: linear-gradient(135deg, #0284c7, #0369a1);
+            color: white !important;
+            padding: 0.6rem 1.2rem;
+            border-radius: 0.5rem;
+            font-weight: 700;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .btn-store:hover {
+            background: linear-gradient(135deg, #0369a1, #075985);
+            transform: translateY(-2px);
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 4rem 1rem;
+            background: linear-gradient(to bottom, #1e293b, #0f172a);
+        }
+
+        .hero h1 {
+            font-size: 3.2rem;
+            margin-bottom: 1rem;
+            color: #f8fafc;
+            font-weight: 800;
+        }
+
+        .hero p {
+            color: #94a3b8;
+            font-size: 1.25rem;
+            margin-bottom: 2rem;
+        }
+
+        .ip-box {
+            display: inline-flex;
+            align-items: center;
+            background-color: #1e293b;
+            border: 2px solid #334155;
+            padding: 0.8rem 1.8rem;
+            border-radius: 0.75rem;
+            gap: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .ip-box:hover {
+            border-color: #38bdf8;
+            background-color: #0f172a;
+        }
+
+        .ip-box span {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #38bdf8;
+        }
+
+        /* Section Moduri de Joc */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+            flex: 1;
+        }
+
+        .section-title {
+            font-size: 2.2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            color: #f8fafc;
+            font-weight: 700;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .card {
+            background-color: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 1rem;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .card:hover {
+            transform: translateY(-6px);
+            border-color: #38bdf8;
+            box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.4);
+        }
+
+        .card-icon {
+            font-size: 2.5rem;
+            color: #38bdf8;
+        }
+
+        .card h3 {
             font-size: 1.5rem;
-            font-weight: bold;
+            color: #f8fafc;
+        }
+
+        .card p {
+            color: #94a3b8;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        /* Modal Setări */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.75);
+            backdrop-filter: blur(4px);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background-color: #1e293b;
+            padding: 2rem;
+            border-radius: 1rem;
+            width: 90%;
+            max-width: 420px;
+            border: 1px solid #334155;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid #334155;
+            padding-bottom: 0.75rem;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: #94a3b8;
+            font-size: 1.8rem;
+            cursor: pointer;
+        }
+
+        .close-btn:hover {
+            color: #f8fafc;
+        }
+
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.2rem;
+        }
+
+        /* Toast Notificari */
+        .toast {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background-color: #0284c7;
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3);
+            display: none;
+            z-index: 1001;
+            font-weight: 600;
+        }
+
+        footer {
+            background-color: #1e293b;
+            text-align: center;
+            padding: 1.5rem;
+            color: #64748b;
+            border-top: 1px solid #334155;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <i class="fa-solid fa-cube"></i> FelixMC Network
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#"><i class="fa-solid fa-house"></i> Acasă</a></li>
+                <li><button id="btn-earth-nav"><i class="fa-solid fa-globe"></i> Earth</button></li>
+                <li><button id="btn-store" class="btn-store"><i class="fa-solid fa-cart-shopping"></i> Store</button></li>
+                <li><button id="btn-settings"><i class="fa-solid fa-gear"></i> Setări</button></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <h1>FelixMC Network</h1>
+        <p>Alătură-te comunității noastre și explorează modurile noastre unice de joc!</p>
+        <div class="ip-box" onclick="copyIP()">
+            <i class="fa-solid fa-server" style="color:#38bdf8;"></i>
+            <span id="ip-text">play.felixmc.ro</span>
+            <i class="fa-solid fa-copy" style="color:#94a3b8;"></i>
+        </div>
+    </section>
+
+    <div class="container">
+        <h2 class="section-title">Moduri de Joc Sezonul 3</h2>
+        <div class="grid">
+            <!-- 1. Secțiunea Earth -->
+            <div class="card" id="earth-section">
+                <div class="card-icon"><i class="fa-solid fa-globe"></i></div>
+                <h3>Earth Towny</h3>
+                <p>Construiește-ți propriul oraș sau imperiu pe harta lumii reale! Diplomatie, economie, teritorii și războaie între națiuni.</p>
+            </div>
+
+            <!-- 2. Secțiunea Ratopia -->
+            <div class="card" id="ratopia-section">
+                <div class="card-icon"><i class="fa-solid fa-crown"></i></div>
+                <h3>Regatul Ratopia</h3>
+                <p>Alege-ți regatul în GUI (`/regat`), luptă pentru teritoriu, dezvoltă economia orașului și condu comunitatea Ratopia spre dominanță!</p>
+            </div>
+
+            <!-- 3. Secțiunea Roleplay -->
+            <div class="card" id="roleplay-section">
+                <div class="card-icon"><i class="fa-solid fa-users"></i></div>
+                <h3>Roleplay SMP</h3>
+                <p>Creează-ți propria poveste, interacționează cu alți jucători într-o lume imersivă, dezvoltă afaceri și participă la evenimentele serverului.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Setări -->
+    <div class="modal" id="settings-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Setări Site</h3>
+                <button class="close-btn" onclick="closeSettings()">&times;</button>
+            </div>
+            <div class="setting-item">
+                <label for="sound-toggle">Notificări sonore</label>
+                <input type="checkbox" id="sound-toggle" checked>
+            </div>
+            <div class="setting-item">
+                <label for="theme-select">Tema interfeței</label>
+                <select id="theme-select" style="background:#0f172a; color:white; padding:0.4rem; border-radius:6px; border:1px solid #334155;">
+                    <option>Dark Mode (Default)</option>
+                    <option>Midnight Blue</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast">Notificare!</div>
+
+    <footer>
+        &copy; 2026 FelixMC Network. Toate drepturile rezervate.
+    </footer>
+
+    <script>
+        // 1. Deschidere Store (Schimbă cu link-ul tău Tebex/CraftingStore când e gata)
+        document.getElementById('btn-store').addEventListener('click', function() {
+            showToast('Se deschide magazinul oficial Tebex...');
+            // Deschide magazinul într-un tab nou (sau pune link-ul tău specific):
+            window.open('https://store.felixmc.ro', '_blank');
+        });
+
+        // 2. Deschiderea Modalului de Setări
+        const modal = document.getElementById('settings-modal');
+        document.getElementById('btn-settings').addEventListener('click', function() {
+            modal.style.display = 'flex';
+        });
+
+        function closeSettings() {
+            modal.style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            if (event.target === modal) {
+                closeSettings();
+            }
+        };
+
+        // 3. Navigare rapidă direct la secțiunea Earth
+        document.getElementById('btn-earth-nav').addEventListener('click', function() {
+            document.getElementById('earth-section').scrollIntoView({ behavior: 'smooth' });
+            showToast('Ai navigat la modul Earth!');
+        });
+
+        // 4. Funcție copiere IP
+        function copyIP() {
+            const ip = document.getElementById('ip-text').innerText;
+            navigator.clipboard.writeText(ip);
+            showToast('IP copiat cu succes: ' + ip);
+        }
+
+        // Funcție afișare mesaj Toast
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.innerText = message;
+            toast.style.display = 'block';
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 3000);
+        }
+    </script>
+</body>
+</html>            font-weight: bold;
             color: #38bdf8;
             display: flex;
             align-items: center;
