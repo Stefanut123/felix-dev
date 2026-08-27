@@ -30,11 +30,382 @@
             transition: background-color 0.3s, border-color 0.3s, color 0.3s;
         }
 
-        body, button, a, input {
-            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="%23ffaa00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 17.5L3 6V3h3l11.5 11.5"/><path d="M13 19l6-6"/><path d="M16 16l4 4"/><path d="M19 21l2-2"/></svg>'), auto !important;
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
         }
 
-        body {
+        /* Navigație Fixă */
+        .top-bar {
+            background-color: var(--card-bg);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            border-bottom: 3px solid var(--accent-color);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 100;
+        }
+
+        .header-left, .header-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .menu-btn {
+            font-size: 1.8rem;
+            background: none;
+            border: none;
+            color: var(--accent-color);
+            cursor: pointer;
+        }
+
+        .site-title {
+            margin: 0;
+            font-size: 1.8em;
+            text-transform: uppercase;
+            color: var(--accent-color);
+        }
+
+        .settings-btn-nav {
+            background-color: var(--card-bg);
+            color: var(--accent-color);
+            border: 2px solid var(--accent-color);
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .store-btn {
+            background-color: var(--accent-color);
+            color: #121212;
+            padding: 10px 22px;
+            font-size: 1em;
+            font-weight: bold;
+            border: none;
+            border-radius: 6px;
+            text-transform: uppercase;
+            cursor: pointer;
+        }
+
+        .store-btn:hover {
+            background-color: var(--accent-hover);
+        }
+
+        /* Caseta IP */
+        .ip-box {
+            background-color: var(--card-bg);
+            border: 2px dashed var(--accent-color);
+            border-radius: 10px;
+            padding: 15px 25px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+        }
+
+        .ip-text {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+
+        .copy-badge {
+            background-color: var(--accent-color);
+            color: #121212;
+            padding: 5px 12px;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 0.85em;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            height: 100vh;
+            width: 0;
+            position: fixed;
+            z-index: 200;
+            top: 0;
+            left: 0;
+            background-color: var(--sidebar-bg);
+            overflow-x: hidden;
+            transition: 0.3s;
+            padding-top: 60px;
+            border-right: 2px solid var(--accent-color);
+        }
+
+        .sidebar h3 {
+            color: var(--accent-color);
+            text-align: center;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+
+        .sidebar a {
+            padding: 15px 30px;
+            text-decoration: none;
+            font-size: 1.2em;
+            color: #ffffff;
+            display: block;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .sidebar a:hover {
+            background-color: var(--accent-color);
+            color: #121212;
+            font-weight: bold;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 25px;
+            font-size: 2.5rem;
+            color: #aaa;
+            cursor: pointer;
+        }
+
+        /* Container Pagini */
+        .page-container {
+            margin-top: 90px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+            min-height: calc(100vh - 90px);
+        }
+
+        .page-title {
+            font-size: 3em;
+            margin-bottom: 10px;
+            color: var(--accent-color);
+            text-align: center;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            color: #aaa;
+            font-size: 1.1em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .news-container {
+            width: 100%;
+            max-width: 800px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .news-card {
+            background-color: var(--card-bg);
+            border-left: 5px solid var(--accent-color);
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        /* Modale Curate */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-box {
+            background-color: var(--card-bg);
+            border: 2px solid var(--accent-color);
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 2em;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .discord-link {
+            display: inline-block;
+            background-color: #5865F2;
+            color: white;
+            text-decoration: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+
+        footer {
+            background-color: var(--card-bg);
+            border-top: 2px solid var(--accent-color);
+            padding: 20px;
+            text-align: center;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Bară Navigație -->
+    <div class="top-bar">
+        <div class="header-left">
+            <button class="menu-btn" onclick="toggleNav(true)">☰</button>
+            <h1 class="site-title">FelixMC</h1>
+        </div>
+        <div class="header-right">
+            <button class="settings-btn-nav" onclick="toggleModal('settingsModal', true)">⚙️ Setări</button>
+            <button class="store-btn" onclick="toggleModal('storeModal', true)">Store</button>
+        </div>
+    </div>
+
+    <!-- Meniu Lateral (Fără opțiune de setări în interior) -->
+    <div id="mySidebar" class="sidebar">
+        <span class="close-btn" onclick="toggleNav(false)">&times;</span>
+        <h3>Meniu Server</h3>
+        <a href="#" onclick="showPage('homeView')">🏠 Pagina Principală</a>
+        <a href="#" onclick="showPage('page-ratopia')">Ratopia</a>
+        <a href="#" onclick="showPage('page-roleplay')">Roleplay</a>
+        <a href="#" onclick="showPage('page-earth')">Earth</a>
+    </div>
+
+    <!-- 1. ACASĂ -->
+    <div class="page-container" id="homeView">
+        <h2 class="page-title">FelixMC Network</h2>
+        <p class="subtitle">Apasă pe butonul ☰ din stânga sus pentru a naviga între moduri.</p>
+
+        <!-- Caseta IP cu Copiere Garantată -->
+        <div class="ip-box" onclick="copyServerIP()">
+            <span>🌐 IP:</span>
+            <span class="ip-text" id="rawIpText">play.felixmc.ro</span>
+            <span class="copy-badge" id="copyBadge">📋 Click pentru Copiere</span>
+        </div>
+
+        <div class="news-container">
+            <div class="news-card">
+                <h3 style="color:var(--accent-color); margin-top:0;">📢 Anunț FelixMC</h3>
+                <p>Meniul a fost actualizat. Butoanele Store și Setări din antet funcționează acum direct!</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. RATOPIA -->
+    <div class="page-container" id="page-ratopia" style="display:none;">
+        <h1 class="page-title">Ratopia</h1>
+        <p class="subtitle">Modulul oficial Ratopia pe FelixMC Network.</p>
+    </div>
+
+    <!-- 3. ROLEPLAY -->
+    <div class="page-container" id="page-roleplay" style="display:none;">
+        <h1 class="page-title">Roleplay</h1>
+        <p class="subtitle">Lumea Roleplay pe FelixMC.</p>
+    </div>
+
+    <!-- 4. EARTH -->
+    <div class="page-container" id="page-earth" style="display:none;">
+        <h1 class="page-title">Earth Towny</h1>
+        <p class="subtitle">Construiește-ți națiunea pe harta Pământului.</p>
+    </div>
+
+    <!-- MODAL STORE -->
+    <div id="storeModal" class="modal-overlay" style="display:none;">
+        <div class="modal-box">
+            <span class="modal-close" onclick="toggleModal('storeModal', false)">&times;</span>
+            <h2 style="color: var(--accent-color);">🛒 Magazin FelixMC</h2>
+            <p>Pentru a achiziționa grade (VIP, MVP, LEGEND), accesează canalul de tickete pe Discord.</p>
+            <a href="https://discord.gg/felixmc" target="_blank" class="discord-link">Deschide Discord Store</a>
+        </div>
+    </div>
+
+    <!-- MODAL SETĂRI -->
+    <div id="settingsModal" class="modal-overlay" style="display:none;">
+        <div class="modal-box">
+            <span class="modal-close" onclick="toggleModal('settingsModal', false)">&times;</span>
+            <h2 style="color: var(--accent-color);">⚙️ Setări Interfață</h2>
+            <p>Schimbă tema vizuală a site-ului:</p>
+            <button class="settings-btn-nav" onclick="document.body.classList.toggle('nether-theme')">Comută Temă Nether/Dark</button>
+        </div>
+    </div>
+
+    <footer>
+        <div>&copy; 2026 FelixMC Network. Toate drepturile rezervate.</div>
+    </footer>
+
+    <script>
+        // Control Sidebar
+        function toggleNav(open) {
+            document.getElementById("mySidebar").style.width = open ? "260px" : "0";
+        }
+
+        // Navigare între pagini
+        function showPage(pageId) {
+            toggleNav(false);
+            const pages = ['homeView', 'page-ratopia', 'page-roleplay', 'page-earth'];
+            pages.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.style.display = (id === pageId) ? 'flex' : 'none';
+            });
+        }
+
+        // Deschidere/Închidere Modale
+        function toggleModal(modalId, show) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.style.display = show ? 'flex' : 'none';
+            }
+        }
+
+        // Copiere IP 100% Funcțională (Fallback Direct)
+        function copyServerIP() {
+            const textToCopy = "play.felixmc.ro";
+            const badge = document.getElementById("copyBadge");
+
+            // Metodă directă prin element temporar
+            const input = document.createElement("input");
+            input.value = textToCopy;
+            document.body.appendChild(input);
+            input.select();
+            document.execCommand("copy");
+            document.body.removeChild(input);
+
+            // Feedback vizual
+            badge.innerText = "✅ IP Copiat!";
+            badge.style.backgroundColor = "#28a745";
+            badge.style.color = "#ffffff";
+
+            setTimeout(() => {
+                badge.innerText = "📋 Click pentru Copiere";
+                badge.style.backgroundColor = "var(--accent-color)";
+                badge.style.color = "#121212";
+            }, 2000);
+        }
+    </script>
+</body>
+</html>        body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
