@@ -4,37 +4,360 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FelixMC Network</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        :root {
-            --bg-color: #121212;
-            --card-bg: #1a1a1a;
-            --sidebar-bg: #181818;
-            --accent-color: #ffaa00;
-            --accent-hover: #e69900;
-            --text-color: #ffffff;
-            --border-color: #333333;
-        }
-
-        body.nether-theme {
-            --bg-color: #1a0808;
-            --card-bg: #2b0d0d;
-            --sidebar-bg: #220a0a;
-            --accent-color: #ff3300;
-            --accent-hover: #cc2900;
-            --text-color: #fff0f0;
-            --border-color: #4a1515;
-        }
-
         * {
+            margin: 0;
+            padding: 0;
             box-sizing: border-box;
-            transition: background-color 0.3s, border-color 0.3s, color 0.3s;
-        }
-
-        body, button, a, input {
-            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="%23ffaa00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 17.5L3 6V3h3l11.5 11.5"/><path d="M13 19l6-6"/><path d="M16 16l4 4"/><path d="M19 21l2-2"/></svg>'), auto !important;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
+            background-color: #0f172a;
+            color: #f8fafc;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Navbar */
+        header {
+            background-color: #1e293b;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #334155;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #38bdf8;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        nav a, nav button {
+            color: #94a3b8;
+            text-decoration: none;
+            background: none;
+            border: none;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        nav a:hover, nav button:hover {
+            color: #38bdf8;
+        }
+
+        .btn-store {
+            background-color: #0284c7;
+            color: white !important;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            font-weight: 600;
+            transition: background-color 0.2s !important;
+        }
+
+        .btn-store:hover {
+            background-color: #0369a1 !important;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 4rem 1rem;
+            background: linear-gradient(to bottom, #1e293b, #0f172a);
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #f8fafc;
+        }
+
+        .hero p {
+            color: #94a3b8;
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+
+        .ip-box {
+            display: inline-flex;
+            align-items: center;
+            background-color: #1e293b;
+            border: 1px solid #334155;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            gap: 1rem;
+            cursor: pointer;
+        }
+
+        .ip-box:hover {
+            border-color: #38bdf8;
+        }
+
+        /* Server Modes Grid */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            flex: 1;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            color: #e2e8f0;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background-color: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: #38bdf8;
+        }
+
+        .card-icon {
+            font-size: 2rem;
+            color: #38bdf8;
+            margin-bottom: 1rem;
+        }
+
+        .card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .card p {
+            color: #94a3b8;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        /* Modal Setari */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background-color: #1e293b;
+            padding: 2rem;
+            border-radius: 0.75rem;
+            width: 90%;
+            max-width: 400px;
+            border: 1px solid #334155;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: #94a3b8;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        /* Toast Notifications */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #0284c7;
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            display: none;
+            z-index: 1001;
+        }
+
+        footer {
+            background-color: #1e293b;
+            text-align: center;
+            padding: 1.5rem;
+            color: #64748b;
+            border-top: 1px solid #334155;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <i class="fa-solid fa-cube"></i> FelixMC Network
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#"><i class="fa-solid fa-house"></i> Acasă</a></li>
+                <li><button id="btn-earth-nav"><i class="fa-solid fa-globe"></i> Earth</button></li>
+                <li><button id="btn-store" class="btn-store"><i class="fa-solid fa-cart-shopping"></i> Store</button></li>
+                <li><button id="btn-settings"><i class="fa-solid fa-gear"></i> Setări</button></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <h1>Bine ai venit pe FelixMC!</h1>
+        <p>Alătură-te comunității noastre și încearcă modul Earth și multe altele.</p>
+        <div class="ip-box" onclick="copyIP()">
+            <i class="fa-solid fa-server"></i>
+            <span id="ip-text">play.felixmc.ro</span>
+            <i class="fa-solid fa-copy"></i>
+        </div>
+    </section>
+
+    <div class="container">
+        <h2 class="section-title">Moduri de Joc</h2>
+        <div class="grid">
+            <!-- Sectiunea Earth adaugata direct -->
+            <div class="card" id="earth-section">
+                <div class="card-icon"><i class="fa-solid fa-globe"></i></div>
+                <h3>Earth Towny</h3>
+                <p>Construiește-ți propriul oraș sau imperiu pe harta lumii reale! Diplomatie, economie și războaie teritoriale.</p>
+            </div>
+
+            <div class="card">
+                <div class="card-icon"><i class="fa-solid fa-skull"></i></div>
+                <h3>Lifesteal SMP</h3>
+                <p>Fiecare ucidere îți oferă o inimă suplimentară. Dacă pierzi toate inimile, primești ban temporar!</p>
+            </div>
+
+            <div class="card">
+                <div class="card-icon"><i class="fa-solid fa-box"></i></div>
+                <h3>BoxPvP</h3>
+                <p>Luptă în arenă, adună resurse din generatoare și avansează în kit-uri mai puternice.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Setari -->
+    <div class="modal" id="settings-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Setări Site</h3>
+                <button class="close-btn" onclick="closeSettings()">&times;</button>
+            </div>
+            <div class="setting-item">
+                <label for="sound-toggle">Efecte sonore</label>
+                <input type="checkbox" id="sound-toggle" checked>
+            </div>
+            <div class="setting-item">
+                <label for="theme-select">Teme Vizuale</label>
+                <select id="theme-select" style="background:#0f172a; color:white; padding:0.2rem; border-radius:4px;">
+                    <option>Dark Standard</option>
+                    <option>Blue Night</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast">Notificare!</div>
+
+    <footer>
+        &copy; 2026 FelixMC Network. Toate drepturile rezervate.
+    </footer>
+
+    <script>
+        // 1. Functionalitate Buton Store
+        document.getElementById('btn-store').addEventListener('click', function() {
+            showToast('Magazinul FelixMC se deschide... (Redirecționare)');
+            // Aici poți adăuga link-ul direct către magazinul tău:
+            // window.location.href = 'https://store.felixmc.ro';
+        });
+
+        // 2. Functionalitate Buton Setari (Deschide Modalul)
+        const modal = document.getElementById('settings-modal');
+        document.getElementById('btn-settings').addEventListener('click', function() {
+            modal.style.display = 'flex';
+        });
+
+        function closeSettings() {
+            modal.style.display = 'none';
+        }
+
+        // Închidere modal la click în exterior
+        window.onclick = function(event) {
+            if (event.target === modal) {
+                closeSettings();
+            }
+        };
+
+        // 3. Navigare rapidă la secțiunea Earth
+        document.getElementById('btn-earth-nav').addEventListener('click', function() {
+            document.getElementById('earth-section').scrollIntoView({ behavior: 'smooth' });
+            showToast('Ai fost navigat la secțiunea Earth!');
+        });
+
+        // Copiere IP
+        function copyIP() {
+            const ip = document.getElementById('ip-text').innerText;
+            navigator.clipboard.writeText(ip);
+            showToast('IP Copiat: ' + ip);
+        }
+
+        // Functie afisare notificari (Toast)
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.innerText = message;
+            toast.style.display = 'block';
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 3000);
+        }
+    </script>
+</body>
+</html>        body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
