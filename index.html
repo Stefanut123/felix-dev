@@ -1,40 +1,673 @@
 <!DOCTYPE html>
 <html lang="ro">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FelixMC Network</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg: #0b0b0f;
-            --bg-elevated: #121218;
-            --card: #16161d;
-            --card-hover: #1c1c26;
-            --sidebar: #0f0f14;
-            --accent: #f5a623;
-            --accent-hover: #ffb84d;
-            --accent-glow: rgba(245, 166, 35, 0.25);
-            --text: #f0f0f5;
-            --text-muted: #9a9aaa;
-            --border: #2a2a35;
-            --success: #22c55e;
-            --radius: 14px;
-            --radius-sm: 10px;
-            --shadow: 0 8px 32px rgba(0,0,0,0.4);
-            --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FelixMC Network</title>
+<style>
+:root {
+    --bg: #0c0c10;
+    --card: #16161d;
+    --accent: #f5a623;
+    --accent-hover: #ffb84d;
+    --text: #f0f0f5;
+    --muted: #9a9aaa;
+    --border: #2a2a35;
+    --success: #22c55e;
+}
 
-        body.nether-theme {
-            --bg: #120808;
-            --bg-elevated: #1a0c0c;
-            --card: #221010;
-            --card-hover: #2c1414;
-            --sidebar: #160a0a;
-            --accent: #ff3b1f;
-            --accent-hover: #ff5c45;
+body.nether {
+    --bg: #140808;
+    --card: #1f0e0e;
+    --accent: #ff3b1f;
+    --accent-hover: #ff5c45;
+    --text: #fff5f3;
+    --muted: #c9a8a3;
+    --border: #3d1a1a;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    line-height: 1.5;
+}
+
+/* ===== TOP BAR ===== */
+.topbar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 64px;
+    background: rgba(18,18,24,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    z-index: 1000;
+}
+
+.logo {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--accent);
+    letter-spacing: -0.5px;
+}
+.logo span { color: var(--text); }
+
+.top-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 9px 14px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    transition: 0.2s;
+}
+
+.btn-icon {
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    background: transparent;
+    border: 1.5px solid var(--border);
+    color: var(--accent);
+    border-radius: 10px;
+    font-size: 1.25rem;
+}
+
+.btn-icon:hover {
+    background: rgba(245,166,35,0.15);
+    border-color: var(--accent);
+}
+
+.btn-primary {
+    background: var(--accent);
+    color: #0c0c10;
+}
+
+.btn-primary:hover {
+    background: var(--accent-hover);
+}
+
+.btn-outline {
+    background: transparent;
+    color: var(--accent);
+    border: 1.5px solid var(--accent);
+}
+
+/* ===== SIDEBAR ===== */
+.overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 1100;
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.3s;
+}
+
+.overlay.open {
+    opacity: 1;
+    visibility: visible;
+}
+
+.sidebar {
+    position: fixed;
+    top: 0; left: 0;
+    width: 270px;
+    height: 100%;
+    background: var(--card);
+    border-right: 1px solid var(--border);
+    z-index: 1200;
+    transform: translateX(-100%);
+    transition: 0.3s cubic-bezier(0.4,0,0.2,1);
+    padding-top: 20px;
+}
+
+.sidebar.open { transform: translateX(0); }
+
+.sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 18px 18px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 10px;
+}
+
+.sidebar-header span {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--muted);
+    font-weight: 600;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-size: 1.8rem;
+    cursor: pointer;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+}
+
+.close-btn:hover { background: var(--bg); color: var(--text); }
+
+.sidebar nav a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 20px;
+    color: var(--text);
+    text-decoration: none;
+    font-weight: 500;
+    transition: 0.2s;
+}
+
+.sidebar nav a:hover {
+    background: rgba(245,166,35,0.1);
+    color: var(--accent);
+}
+
+/* ===== MAIN ===== */
+.main {
+    margin-top: 64px;
+    padding: 32px 16px 60px;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.page { display: none; }
+.page.active { display: block; animation: fade 0.35s ease; }
+
+@keyframes fade {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.page-title {
+    font-size: 2rem;
+    font-weight: 800;
+    text-align: center;
+    margin-bottom: 8px;
+}
+.page-title span { color: var(--accent); }
+
+.subtitle {
+    text-align: center;
+    color: var(--muted);
+    margin-bottom: 28px;
+    font-size: 1.05rem;
+}
+
+/* IP BOX */
+.ip-box {
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    margin-bottom: 32px;
+    transition: 0.25s;
+}
+
+.ip-box:hover {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(245,166,35,0.15);
+}
+
+.ip-box.copied {
+    border-color: var(--success);
+    background: rgba(34,197,94,0.08);
+}
+
+.ip-text {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--accent);
+    flex: 1;
+}
+
+.copy-badge {
+    background: var(--accent);
+    color: #0c0c10;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.8rem;
+    white-space: nowrap;
+}
+
+.ip-box.copied .copy-badge {
+    background: var(--success);
+    color: white;
+}
+
+/* CARDS */
+.card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px 22px;
+    margin-bottom: 16px;
+    border-left: 4px solid var(--accent);
+}
+
+.card h3 {
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.card p {
+    color: var(--muted);
+    font-size: 0.95rem;
+}
+
+/* MODE HERO */
+.mode-hero {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px 24px;
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.mode-hero h2 {
+    color: var(--accent);
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+.mode-hero p {
+    color: var(--muted);
+    margin-bottom: 20px;
+}
+
+/* FEATURES */
+.features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+}
+
+.feature {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 14px;
+    text-align: center;
+}
+
+.feature .emoji { font-size: 1.6rem; margin-bottom: 8px; }
+.feature h4 { font-size: 0.95rem; margin-bottom: 4px; }
+.feature p { font-size: 0.82rem; color: var(--muted); }
+
+/* MODAL */
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.75);
+    backdrop-filter: blur(6px);
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.25s;
+}
+
+.modal.open {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 28px 24px;
+    width: 100%;
+    max-width: 400px;
+    position: relative;
+    transform: scale(0.9);
+    transition: 0.25s;
+}
+
+.modal.open .modal-box { transform: scale(1); }
+
+.modal-close {
+    position: absolute;
+    top: 12px; right: 14px;
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-size: 1.6rem;
+    cursor: pointer;
+    width: 36px; height: 36px;
+    border-radius: 8px;
+}
+
+.modal-close:hover { background: var(--bg); color: var(--text); }
+
+.modal-box h2 {
+    color: var(--accent);
+    font-size: 1.35rem;
+    margin-bottom: 10px;
+}
+
+.modal-box p {
+    color: var(--muted);
+    margin-bottom: 20px;
+}
+
+.discord-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #5865F2;
+    color: white;
+    text-decoration: none;
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-weight: 700;
+}
+
+.discord-btn:hover { background: #4752c4; }
+
+/* FOOTER */
+footer {
+    text-align: center;
+    padding: 24px 16px;
+    color: var(--muted);
+    font-size: 0.85rem;
+    border-top: 1px solid var(--border);
+    margin-top: 40px;
+}
+
+footer a { color: var(--accent); text-decoration: none; }
+
+/* MOBILE */
+@media (max-width: 480px) {
+    .page-title { font-size: 1.7rem; }
+    .ip-box { flex-wrap: wrap; }
+    .copy-badge { width: 100%; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<header class="topbar">
+    <div style="display:flex;align-items:center;gap:12px;">
+        <button class="btn-icon" onclick="toggleMenu(true)">☰</button>
+        <div class="logo">FELIX<span>MC</span></div>
+    </div>
+    <div class="top-actions">
+        <button class="btn-icon" onclick="openModal('settings')">⚙️</button>
+        <button class="btn btn-primary" onclick="openModal('store')">🛒</button>
+    </div>
+</header>
+
+<!-- OVERLAY + SIDEBAR -->
+<div class="overlay" id="overlay" onclick="toggleMenu(false)"></div>
+<aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+        <span>Meniu Server</span>
+        <button class="close-btn" onclick="toggleMenu(false)">×</button>
+    </div>
+    <nav>
+        <a href="#" onclick="showPage('home');return false;">🏠 Pagina Principală</a>
+        <a href="#" onclick="showPage('ratopia');return false;">🐀 Ratopia</a>
+        <a href="#" onclick="showPage('roleplay');return false;">🎭 Roleplay</a>
+        <a href="#" onclick="showPage('earth');return false;">🌍 Earth Towny</a>
+    </nav>
+</aside>
+
+<!-- MAIN CONTENT -->
+<main class="main">
+
+    <!-- HOME -->
+    <section class="page active" id="home">
+        <h1 class="page-title">Felix<span>MC</span> Network</h1>
+        <p class="subtitle">Apasă pe ☰ pentru a naviga între moduri</p>
+
+        <div class="ip-box" id="ipBox" onclick="copyIP()">
+            <span style="color:var(--muted);font-size:0.9rem;">🌐 IP</span>
+            <span class="ip-text">play.felixmc.ro</span>
+            <span class="copy-badge" id="copyBadge">📋 Copiază</span>
+        </div>
+
+        <div class="card">
+            <h3>📢 Anunț</h3>
+            <p>Interfața a fost complet actualizată. Butoanele Store și Setări funcționează, iar tema Nether e disponibilă din Setări.</p>
+        </div>
+        <div class="card">
+            <h3>🎮 Moduri</h3>
+            <p>Ratopia, Roleplay și Earth Towny – fiecare cu experiență unică. Alege din meniul lateral.</p>
+        </div>
+        <div class="card">
+            <h3>💎 Rank-uri</h3>
+            <p>VIP, MVP, LEGEND – cumpără din Store (ticket pe Discord).</p>
+        </div>
+    </section>
+
+    <!-- RATOPIA -->
+    <section class="page" id="ratopia">
+        <h1 class="page-title">Ratopia</h1>
+        <p class="subtitle">Modulul oficial pe FelixMC</p>
+
+        <div class="mode-hero">
+            <h2>🐀 Bun venit în Ratopia!</h2>
+            <p>Explorează, construiește și domină alături de comunitate.</p>
+            <button class="btn btn-primary" onclick="copyIP()">📋 Copiază IP & Joacă</button>
+        </div>
+
+        <div class="features">
+            <div class="feature">
+                <div class="emoji">⚔️</div>
+                <h4>PvP Intens</h4>
+                <p>Evenimente săptămânale</p>
+            </div>
+            <div class="feature">
+                <div class="emoji">🏗️</div>
+                <h4>Construcții</h4>
+                <p>Libertate totală</p>
+            </div>
+            <div class="feature">
+                <div class="emoji">🎁</div>
+                <h4>Rewards</h4>
+                <p>Recompense zilnice</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ROLEPLAY -->
+    <section class="page" id="roleplay">
+        <h1 class="page-title">Roleplay</h1>
+        <p class="subtitle">Lumea Roleplay pe FelixMC</p>
+
+        <div class="mode-hero">
+            <h2>🎭 Intră în personaj</h2>
+            <p>Creează-ți povestea și interacționează realist cu ceilalți jucători.</p>
+            <button class="btn btn-primary" onclick="copyIP()">📋 Copiază IP & Joacă</button>
+        </div>
+
+        <div class="features">
+            <div class="feature">
+                <div class="emoji">🏙️</div>
+                <h4>Orașe Realiste</h4>
+                <p>Economie vie</p>
+            </div>
+            <div class="feature">
+                <div class="emoji">👮</div>
+                <h4>Joburi</h4>
+                <p>Poliție, mafie, medici</p>
+            </div>
+            <div class="feature">
+                <div class="emoji">📜</div>
+                <h4>Storyline</h4>
+                <p>Evenimente continue</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- EARTH -->
+    <section class="page" id="earth">
+        <h1 class="page-title">Earth Towny</h1>
+        <p class="subtitle">Construiește-ți națiunea pe harta Pământului</p>
+
+        <div class="mode-hero">
+            <h2>🌍 Domină lumea reală</h2>
+            <p>Harta reală + sistem Towny. Formează națiuni și scrie istoria serverului.</p>
+            <button class="btn btn-primary" onclick="copyIP()">📋 Copiază IP & Joacă</button>
+        </div>
+
+        <div class="features">
+            <div class="feature">
+                <div class="emoji">🗺️</div>
+                <h4>Hartă Reală</h4>
+                <p>Pământul 1:1000</p>
+            </div>
+            <div class="feature">
+                <div class="emoji">🏰</div>
+                <h4>Towny</h4>
+                <p>Orașe & națiuni</p>
+            </div>
+            <div class="feature">
+                <div class="emoji">⚔️</div>
+                <h4>Războaie</h4>
+                <p>Conflicte strategice</p>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<!-- MODAL STORE -->
+<div class="modal" id="store">
+    <div class="modal-box">
+        <button class="modal-close" onclick="closeModal('store')">×</button>
+        <h2>🛒 Magazin FelixMC</h2>
+        <p>Pentru rank-uri (VIP, MVP, LEGEND) și kit-uri exclusive, creează un ticket pe Discord.</p>
+        <a href="https://discord.gg/felixmc" target="_blank" class="discord-btn">Deschide Discord Store</a>
+    </div>
+</div>
+
+<!-- MODAL SETTINGS -->
+<div class="modal" id="settings">
+    <div class="modal-box">
+        <button class="modal-close" onclick="closeModal('settings')">×</button>
+        <h2>⚙️ Setări</h2>
+        <p>Schimbă tema vizuală a site-ului:</p>
+        <button class="btn btn-outline" style="width:100%;" onclick="toggleTheme()">🔥 Comută Temă Nether / Dark</button>
+    </div>
+</div>
+
+<footer>
+    © 2026 <strong>FelixMC Network</strong> · 
+    <a href="https://discord.gg/felixmc" target="_blank">Discord</a>
+</footer>
+
+<script>
+function toggleMenu(open) {
+    document.getElementById('sidebar').classList.toggle('open', open);
+    document.getElementById('overlay').classList.toggle('open', open);
+}
+
+function showPage(id) {
+    toggleMenu(false);
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function openModal(id) {
+    document.getElementById(id).classList.add('open');
+}
+
+function closeModal(id) {
+    document.getElementById(id).classList.remove('open');
+}
+
+// Close modal when clicking outside
+document.querySelectorAll('.modal').forEach(m => {
+    m.addEventListener('click', e => {
+        if (e.target === m) closeModal(m.id);
+    });
+});
+
+function toggleTheme() {
+    document.body.classList.toggle('nether');
+    localStorage.setItem('theme', document.body.classList.contains('nether') ? 'nether' : 'dark');
+}
+
+// Restore theme
+if (localStorage.getItem('theme') === 'nether') {
+    document.body.classList.add('nether');
+}
+
+async function copyIP() {
+    const text = 'play.felixmc.ro';
+    const badge = document.getElementById('copyBadge');
+    const box = document.getElementById('ipBox');
+
+    try {
+        await navigator.clipboard.writeText(text);
+    } catch {
+        const input = document.createElement('input');
+        input.value = text;
+        document.body.appendChild(input);
+        input.select();
+        document.execCommand('copy');
+        document.body.removeChild(input);
+    }
+
+    badge.textContent = '✅ Copiat!';
+    box.classList.add('copied');
+    setTimeout(() => {
+        badge.textContent = '📋 Copiază';
+        box.classList.remove('copied');
+    }, 2000);
+}
+
+// ESC closes everything
+document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+        toggleMenu(false);
+        document.querySelectorAll('.modal.open').forEach(m => closeModal(m.id));
+    }
+});
+</script>
+</body>
+</html>            --accent-hover: #ff5c45;
             --accent-glow: rgba(255, 59, 31, 0.28);
             --text: #fff5f3;
             --text-muted: #c9a8a3;
