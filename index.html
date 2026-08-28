@@ -9,32 +9,387 @@
   --bg: #0c0c10;
   --card: #16161d;
   --accent: #f5a623;
-  --accent-hover: #ffb84d;
   --text: #f0f0f5;
   --muted: #9a9aaa;
   --border: #2a2a35;
   --success: #22c55e;
   --topbar: #121218;
 }
-
 body.light {
-  --bg: #f4f4f8;
-  --card: #ffffff;
-  --accent: #e67e00;
-  --accent-hover: #f39c12;
-  --text: #1a1a1f;
-  --muted: #666677;
-  --border: #e0e0e8;
-  --topbar: #ffffff;
+  --bg: #f4f4f8; --card: #fff; --accent: #e67e00; --text: #1a1a1f;
+  --muted: #666; --border: #e0e0e8; --topbar: #fff;
+}
+body.nether {
+  --bg: #140808; --card: #1f0e0e; --accent: #ff3b1f; --text: #fff5f3;
+  --muted: #c9a8a3; --border: #3d1a1a; --topbar: #1a0c0c;
 }
 
-body.nether {
-  --bg: #140808;
-  --card: #1f0e0e;
-  --accent: #ff3b1f;
-  --accent-hover: #ff5c45;
-  --text: #fff5f3;
-  --muted: #c9a8a3;
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: system-ui, -apple-system, sans-serif;
+  background: var(--bg); color: var(--text);
+  min-height: 100vh; line-height: 1.5; overflow-x: hidden;
+}
+
+/* ===== LOADER (dispare automat și fără JS) ===== */
+#loader {
+  position: fixed; inset: 0;
+  background: #0c0c10;
+  z-index: 9999;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  animation: hideLoader 0.6s ease 1.8s forwards;
+}
+@keyframes hideLoader {
+  to { opacity: 0; visibility: hidden; pointer-events: none; }
+}
+.loader-logo {
+  font-size: 2.5rem; font-weight: 900; color: #f5a623;
+  animation: pulse 1.1s ease-in-out infinite;
+}
+.loader-logo span { color: #fff; }
+.loader-bar {
+  width: 140px; height: 4px; background: #2a2a35;
+  border-radius: 4px; margin-top: 20px; overflow: hidden;
+}
+.loader-bar-inner {
+  height: 100%; width: 0; background: #f5a623;
+  animation: loadBar 1.5s ease forwards;
+}
+@keyframes pulse {
+  0%,100% { transform: scale(1); } 50% { transform: scale(1.05); }
+}
+@keyframes loadBar { to { width: 100%; } }
+
+/* TOPBAR */
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0; height: 60px;
+  background: var(--topbar); border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 12px; z-index: 100;
+}
+.logo { font-size: 1.35rem; font-weight: 800; color: var(--accent); }
+.logo span { color: var(--text); }
+.top-right { display: flex; gap: 8px; }
+.icon-btn, .store-btn {
+  width: 42px; height: 42px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.2rem; border: none;
+}
+.icon-btn {
+  background: transparent; border: 1.5px solid var(--border); color: var(--accent);
+}
+.store-btn { background: var(--accent); color: #0c0c10; }
+body.light .store-btn { color: #fff; }
+
+/* SIDEBAR */
+.overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.65);
+  z-index: 200; opacity: 0; visibility: hidden; transition: 0.25s;
+}
+.overlay.show { opacity: 1; visibility: visible; }
+.sidebar {
+  position: fixed; top: 0; left: 0; width: 270px; height: 100%;
+  background: var(--card); z-index: 300;
+  transform: translateX(-100%); transition: transform 0.3s ease;
+  padding-top: 16px; border-right: 1px solid var(--border);
+}
+.sidebar.show { transform: translateX(0); }
+.sidebar-top {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 0 16px 16px; border-bottom: 1px solid var(--border); margin-bottom: 8px;
+}
+.sidebar-top span { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); font-weight: 600; }
+.close-btn { background: none; border: none; color: var(--muted); font-size: 1.8rem; width: 36px; height: 36px; }
+.sidebar a {
+  display: flex; align-items: center; gap: 14px;
+  padding: 14px 20px; color: var(--text); text-decoration: none; font-weight: 500;
+}
+.sidebar a:hover { background: rgba(245,166,35,0.12); color: var(--accent); }
+.sidebar a .icon { font-size: 1.25rem; transition: transform 0.3s; }
+.sidebar a:hover .icon { transform: scale(1.2) rotate(-6deg); }
+
+/* CONTENT */
+.content { padding: 76px 16px 40px; max-width: 640px; margin: 0 auto; }
+.page { display: none; }
+.page.active { display: block; }
+.page-title { font-size: 1.85rem; font-weight: 800; text-align: center; margin-bottom: 6px; }
+.page-title span { color: var(--accent); }
+.subtitle { text-align: center; color: var(--muted); margin-bottom: 24px; font-size: 0.95rem; }
+
+.ip-box {
+  background: var(--card); border: 1.5px solid var(--border); border-radius: 12px;
+  padding: 14px 16px; display: flex; align-items: center; gap: 10px; margin-bottom: 24px;
+}
+.ip-label { color: var(--muted); font-size: 0.85rem; }
+.ip-text { flex: 1; font-size: 1.15rem; font-weight: 700; color: var(--accent); }
+.copy-btn {
+  background: var(--accent); color: #0c0c10; border: none;
+  padding: 7px 12px; border-radius: 8px; font-weight: 700; font-size: 0.8rem;
+}
+body.light .copy-btn { color: #fff; }
+.ip-box.copied { border-color: var(--success); }
+.ip-box.copied .copy-btn { background: var(--success); color: #fff; }
+
+.card {
+  background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+  padding: 16px 18px; margin-bottom: 14px; border-left: 4px solid var(--accent);
+}
+.card h3 { font-size: 1.05rem; margin-bottom: 6px; }
+.card p { color: var(--muted); font-size: 0.92rem; }
+
+.mode-hero {
+  background: var(--card); border: 1px solid var(--border); border-radius: 14px;
+  padding: 24px 18px; text-align: center; margin-bottom: 20px;
+}
+.mode-hero h2 { color: var(--accent); font-size: 1.4rem; margin-bottom: 8px; }
+.mode-hero p { color: var(--muted); margin-bottom: 16px; font-size: 0.95rem; }
+.play-btn {
+  background: var(--accent); color: #0c0c10; border: none;
+  padding: 11px 20px; border-radius: 10px; font-weight: 700; font-size: 0.95rem;
+}
+body.light .play-btn { color: #fff; }
+
+.section-title { font-size: 1.15rem; font-weight: 700; margin: 28px 0 12px; color: var(--accent); }
+.rules-list {
+  background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+  padding: 8px 0; margin-bottom: 20px;
+}
+.rule-item {
+  padding: 12px 18px; border-bottom: 1px solid var(--border);
+  font-size: 0.92rem; display: flex; gap: 10px;
+}
+.rule-item:last-child { border-bottom: none; }
+.rule-num { color: var(--accent); font-weight: 700; min-width: 22px; }
+
+.features { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+.feature {
+  background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+  padding: 14px 8px; text-align: center;
+}
+.feature .emoji { font-size: 1.4rem; margin-bottom: 6px; }
+.feature h4 { font-size: 0.88rem; margin-bottom: 2px; }
+.feature p { font-size: 0.75rem; color: var(--muted); }
+
+.info-box {
+  background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+  padding: 16px 18px; margin-bottom: 14px;
+}
+.info-box h4 { font-size: 1rem; margin-bottom: 6px; color: var(--accent); }
+.info-box p { color: var(--muted); font-size: 0.9rem; }
+
+/* MODAL */
+.modal {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 400;
+  display: flex; align-items: center; justify-content: center; padding: 20px;
+  opacity: 0; visibility: hidden; transition: 0.25s;
+}
+.modal.show { opacity: 1; visibility: visible; }
+.modal-inner {
+  background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+  padding: 24px 20px; width: 100%; max-width: 360px; position: relative;
+}
+.modal-close {
+  position: absolute; top: 10px; right: 12px; background: none; border: none;
+  color: var(--muted); font-size: 1.6rem;
+}
+.modal-inner h2 { color: var(--accent); font-size: 1.25rem; margin-bottom: 10px; }
+.modal-inner p { color: var(--muted); margin-bottom: 16px; font-size: 0.95rem; }
+.discord-btn {
+  display: inline-block; background: #5865F2; color: white; text-decoration: none;
+  padding: 12px 18px; border-radius: 10px; font-weight: 700;
+}
+.theme-options { display: flex; flex-direction: column; gap: 10px; }
+.theme-btn {
+  width: 100%; background: transparent; border: 1.5px solid var(--border);
+  color: var(--text); padding: 12px; border-radius: 10px; font-weight: 600;
+}
+.theme-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+footer {
+  text-align: center; padding: 20px 16px; color: var(--muted);
+  font-size: 0.8rem; border-top: 1px solid var(--border); margin-top: 30px;
+}
+footer a { color: var(--accent); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<div id="loader">
+  <div class="loader-logo">FELIX<span>MC</span></div>
+  <div class="loader-bar"><div class="loader-bar-inner"></div></div>
+</div>
+
+<div class="topbar">
+  <div style="display:flex;align-items:center;gap:10px;">
+    <button class="icon-btn" onclick="openMenu()">☰</button>
+    <div class="logo">FELIX<span>MC</span></div>
+  </div>
+  <div class="top-right">
+    <button class="icon-btn" onclick="openModal('settings')">⚙️</button>
+    <button class="store-btn" onclick="openModal('store')">🛒</button>
+  </div>
+</div>
+
+<div class="overlay" id="overlay" onclick="closeMenu()"></div>
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-top">
+    <span>Meniu Server</span>
+    <button class="close-btn" onclick="closeMenu()">×</button>
+  </div>
+  <a href="#" onclick="goPage('home');return false;"><span class="icon">🏠</span> Pagina Principală</a>
+  <a href="#" onclick="goPage('ratopia');return false;"><span class="icon">🐀</span> Ratopia</a>
+  <a href="#" onclick="goPage('roleplay');return false;"><span class="icon">🎭</span> Roleplay</a>
+  <a href="#" onclick="goPage('earth');return false;"><span class="icon">🌍</span> Earth Towny</a>
+</div>
+
+<div class="content">
+  <div class="page active" id="home">
+    <h1 class="page-title">Felix<span>MC</span> Network</h1>
+    <p class="subtitle">Apasă pe ☰ pentru a naviga între moduri</p>
+    <div class="ip-box" id="ipBox" onclick="copyIP()">
+      <span class="ip-label">🌐 IP</span>
+      <span class="ip-text">play.felixmc.ro</span>
+      <button class="copy-btn" id="copyBtn">Copiază</button>
+    </div>
+    <div class="card"><h3>📢 Anunț</h3><p>Site-ul a fost actualizat cu teme, loading screen și pagini detaliate.</p></div>
+    <div class="card"><h3>🎮 Moduri</h3><p>Ratopia, Roleplay și Earth Towny – fiecare cu reguli complete.</p></div>
+    <div class="card"><h3>💎 Rank-uri</h3><p>VIP, MVP, LEGEND – din Store (ticket Discord).</p></div>
+  </div>
+
+  <div class="page" id="ratopia">
+    <h1 class="page-title">Ratopia</h1>
+    <p class="subtitle">Modulul oficial pe FelixMC</p>
+    <div class="mode-hero">
+      <h2>🐀 Bun venit în Ratopia!</h2>
+      <p>Explorează, construiește și domină alături de comunitate.</p>
+      <button class="play-btn" onclick="copyIP()">📋 Copiază IP & Joacă</button>
+    </div>
+    <div class="features">
+      <div class="feature"><div class="emoji">⚔️</div><h4>PvP</h4><p>Evenimente</p></div>
+      <div class="feature"><div class="emoji">🏗️</div><h4>Build</h4><p>Libertate</p></div>
+      <div class="feature"><div class="emoji">🎁</div><h4>Rewards</h4><p>Zilnice</p></div>
+    </div>
+    <div class="section-title">📜 Reguli Ratopia</div>
+    <div class="rules-list">
+      <div class="rule-item"><span class="rule-num">1.</span> Respectă toți jucătorii.</div>
+      <div class="rule-item"><span class="rule-num">2.</span> Nu este permis cheat / hack.</div>
+      <div class="rule-item"><span class="rule-num">3.</span> Nu distruge construcțiile altora.</div>
+      <div class="rule-item"><span class="rule-num">4.</span> Nu face spam.</div>
+      <div class="rule-item"><span class="rule-num">5.</span> Respectă staff-ul.</div>
+      <div class="rule-item"><span class="rule-num">6.</span> Nu folosi bug-uri.</div>
+    </div>
+  </div>
+
+  <div class="page" id="roleplay">
+    <h1 class="page-title">Roleplay</h1>
+    <p class="subtitle">Lumea Roleplay pe FelixMC</p>
+    <div class="mode-hero">
+      <h2>🎭 Intră în personaj</h2>
+      <p>Creează-ți povestea și interacționează realist cu ceilalți jucători.</p>
+      <button class="play-btn" onclick="copyIP()">📋 Copiază IP & Joacă</button>
+    </div>
+    <div class="features">
+      <div class="feature"><div class="emoji">🏙️</div><h4>Orașe</h4><p>Realiste</p></div>
+      <div class="feature"><div class="emoji">👮</div><h4>Joburi</h4><p>Poliție</p></div>
+      <div class="feature"><div class="emoji">📜</div><h4>Lore</h4><p>Activ</p></div>
+    </div>
+    <div class="section-title">📜 Reguli Roleplay</div>
+    <div class="rules-list">
+      <div class="rule-item"><span class="rule-num">1.</span> Rămâi în personaj (IC).</div>
+      <div class="rule-item"><span class="rule-num">2.</span> Nu RDM / VDM.</div>
+      <div class="rule-item"><span class="rule-num">3.</span> Respectă joburile.</div>
+      <div class="rule-item"><span class="rule-num">4.</span> Nu meta-game.</div>
+      <div class="rule-item"><span class="rule-num">5.</span> Fără powergaming.</div>
+      <div class="rule-item"><span class="rule-num">6.</span> Fear RP obligatoriu.</div>
+    </div>
+  </div>
+
+  <div class="page" id="earth">
+    <h1 class="page-title">Earth Towny</h1>
+    <p class="subtitle">Construiește-ți națiunea pe harta Pământului</p>
+    <div class="mode-hero">
+      <h2>🌍 Domină lumea reală</h2>
+      <p>Harta reală + Towny. Formează orașe și națiuni.</p>
+      <button class="play-btn" onclick="copyIP()">📋 Copiază IP & Joacă</button>
+    </div>
+    <div class="features">
+      <div class="feature"><div class="emoji">🗺️</div><h4>Hartă</h4><p>Reală</p></div>
+      <div class="feature"><div class="emoji">🏰</div><h4>Towny</h4><p>Națiuni</p></div>
+      <div class="feature"><div class="emoji">⚔️</div><h4>Războaie</h4><p>Strategice</p></div>
+    </div>
+    <div class="section-title">📜 Reguli Earth</div>
+    <div class="rules-list">
+      <div class="rule-item"><span class="rule-num">1.</span> Respectă granițele.</div>
+      <div class="rule-item"><span class="rule-num">2.</span> Nu claim peste alții.</div>
+      <div class="rule-item"><span class="rule-num">3.</span> Războaiele se declară oficial.</div>
+      <div class="rule-item"><span class="rule-num">4.</span> Fără grief în afara războiului.</div>
+      <div class="rule-item"><span class="rule-num">5.</span> Alianțele se anunță public.</div>
+      <div class="rule-item"><span class="rule-num">6.</span> Fără alt-uri pentru ocolit reguli.</div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="store">
+  <div class="modal-inner">
+    <button class="modal-close" onclick="closeModal('store')">×</button>
+    <h2>🛒 Magazin FelixMC</h2>
+    <p>Pentru rank-uri (VIP, MVP, LEGEND) creează ticket pe Discord.</p>
+    <a href="https://discord.gg/felixmc" target="_blank" class="discord-btn">Deschide Discord Store</a>
+  </div>
+</div>
+
+<div class="modal" id="settings">
+  <div class="modal-inner">
+    <button class="modal-close" onclick="closeModal('settings')">×</button>
+    <h2>⚙️ Setări</h2>
+    <p>Alege tema:</p>
+    <div class="theme-options">
+      <button class="theme-btn" onclick="setTheme('dark')">🌙 Dark</button>
+      <button class="theme-btn" onclick="setTheme('light')">☀️ Light</button>
+      <button class="theme-btn" onclick="setTheme('nether')">🔥 Nether</button>
+    </div>
+  </div>
+</div>
+
+<footer>© 2026 FelixMC Network · <a href="https://discord.gg/felixmc" target="_blank">Discord</a></footer>
+
+<script>
+// Loader dispare și din JS (backup)
+setTimeout(function(){
+  var l = document.getElementById('loader');
+  if(l) l.style.display = 'none';
+}, 2000);
+
+function openMenu(){ document.getElementById('sidebar').classList.add('show'); document.getElementById('overlay').classList.add('show'); }
+function closeMenu(){ document.getElementById('sidebar').classList.remove('show'); document.getElementById('overlay').classList.remove('show'); }
+function goPage(id){ closeMenu(); document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active')}); document.getElementById(id).classList.add('active'); window.scrollTo(0,0); }
+function openModal(id){ document.getElementById(id).classList.add('show'); }
+function closeModal(id){ document.getElementById(id).classList.remove('show'); }
+document.querySelectorAll('.modal').forEach(function(m){ m.addEventListener('click',function(e){ if(e.target===m) closeModal(m.id); }); });
+
+function setTheme(t){
+  document.body.classList.remove('light','nether');
+  if(t==='light') document.body.classList.add('light');
+  if(t==='nether') document.body.classList.add('nether');
+  localStorage.setItem('felix-theme', t);
+}
+setTheme(localStorage.getItem('felix-theme') || 'dark');
+
+function copyIP(){
+  var text = 'play.felixmc.ro';
+  if(navigator.clipboard){ navigator.clipboard.writeText(text); }
+  else {
+    var i = document.createElement('input'); i.value = text;
+    document.body.appendChild(i); i.select(); document.execCommand('copy'); document.body.removeChild(i);
+  }
+  var box = document.getElementById('ipBox'); var btn = document.getElementById('copyBtn');
+  box.classList.add('copied'); btn.textContent = '✅ Copiat';
+  setTimeout(function(){ box.classList.remove('copied'); btn.textContent = 'Copiază'; }, 2000);
+}
+</script>
+</body>
+</html>  --muted: #c9a8a3;
   --border: #3d1a1a;
   --topbar: #1a0c0c;
 }
