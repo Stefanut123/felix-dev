@@ -5,36 +5,356 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FelixMC Network</title>
 <style>
-:root{--bg:#09090b;--bg2:#0f0f12;--card:#141418;--card-hover:#1a1a20;--accent:#f5a623;--accent-soft:rgba(245,166,35,.15);--text:#f4f4f5;--muted:#a1a1aa;--border:#27272a;--success:#22c55e;--radius:16px;--shadow:0 8px 30px rgba(0,0,0,.35)}
-body.light{--bg:#f4f4f5;--bg2:#e4e4e7;--card:#fff;--card-hover:#fafafa;--accent:#d97706;--accent-soft:rgba(217,119,6,.12);--text:#18181b;--muted:#71717a;--border:#e4e4e7}
-body.nether{--bg:#120808;--bg2:#1a0c0c;--card:#1f1010;--card-hover:#2a1515;--accent:#ff3b1f;--accent-soft:rgba(255,59,31,.15);--text:#fff5f3;--muted:#c9a8a3;--border:#3d1a1a}
+:root{--bg:#09090b;--card:#141418;--accent:#f5a623;--text:#f4f4f5;--muted:#a1a1aa;--border:#27272a}
+body.light{--bg:#f4f4f5;--card:#fff;--accent:#d97706;--text:#18181b;--muted:#71717a;--border:#e4e4e7}
+body.nether{--bg:#120808;--card:#1f1010;--accent:#ff3b1f;--text:#fff5f3;--muted:#c9a8a3;--border:#3d1a1a}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;line-height:1.6;overflow-x:hidden}
+body{font-family:system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;line-height:1.5}
 
-.bg-particles{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none}
-.particle{position:absolute;border-radius:50%;background:var(--accent);opacity:.18;animation:float linear infinite}
-@keyframes float{0%{transform:translateY(100vh) scale(.4);opacity:0}15%{opacity:.25}85%{opacity:.12}100%{transform:translateY(-5vh) scale(1.1);opacity:0}}
+#loader{position:fixed;inset:0;background:#09090b;z-index:99999;display:flex;align-items:center;justify-content:center;flex-direction:column}
+.ll{font-size:2.6rem;font-weight:900;color:#f5a623}.ll span{color:#fff}
+.lb{width:130px;height:4px;background:#2a2a35;border-radius:4px;margin-top:18px;overflow:hidden}
+.lb i{display:block;height:100%;width:0;background:#f5a623;animation:bar 1.8s ease forwards}
+@keyframes bar{to{width:100%}}
 
-#loader{position:fixed;inset:0;background:#09090b;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;animation:hideLoader .7s ease 1.7s forwards}
-@keyframes hideLoader{to{opacity:0;visibility:hidden;pointer-events:none}}
-.loader-logo{font-size:3rem;font-weight:900;color:#f5a623;animation:pulse 1.2s ease-in-out infinite}
-.loader-logo span{color:#fff}
-.loader-bar{width:160px;height:4px;background:#27272a;border-radius:4px;margin-top:24px;overflow:hidden}
-.loader-bar-inner{height:100%;width:0;background:#f5a623;animation:loadBar 1.4s ease forwards}
-@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
-@keyframes loadBar{to{width:100%}}
+.top{position:fixed;top:0;left:0;right:0;height:58px;background:rgba(15,15,18,.96);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 12px;z-index:100}
+.logo{font-size:1.25rem;font-weight:900;color:var(--accent)}.logo span{color:var(--text)}
+.ta{display:flex;gap:6px}
+.btn{padding:8px 12px;border-radius:10px;font-weight:600;font-size:.85rem;border:none;cursor:pointer;font-family:inherit}
+.bg{background:transparent;border:1.5px solid var(--border);color:var(--accent)}
+.bp{background:var(--accent);color:#111}
+.ib{width:40px;height:40px;border-radius:10px;border:1.5px solid var(--border);background:transparent;color:var(--accent);font-size:1.15rem;cursor:pointer}
 
-.topbar{position:fixed;top:0;left:0;right:0;height:68px;background:rgba(15,15,18,.88);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 24px;z-index:100}
-body.light .topbar{background:rgba(255,255,255,.92)}
-body.nether .topbar{background:rgba(26,12,12,.92)}
-.logo{font-size:1.45rem;font-weight:900;color:var(--accent)}.logo span{color:var(--text)}
-.top-actions{display:flex;gap:8px;align-items:center}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:9px 16px;border-radius:11px;font-weight:600;font-size:.88rem;border:none;font-family:inherit;transition:.2s;cursor:pointer}
-.btn-ghost{background:transparent;border:1.5px solid var(--border);color:var(--accent)}
-.btn-ghost:hover{background:var(--accent-soft);border-color:var(--accent)}
-.btn-primary{background:var(--accent);color:#09090b}
-body.light .btn-primary{color:#fff}
-.btn-primary:hover{filter:brightness(1.08);transform:translateY(-1px)}
+#ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:200}
+#sb{position:fixed;top:0;left:0;width:260px;height:100%;background:var(--card);z-index:300;transform:translateX(-110%);transition:.3s;padding-top:12px;border-right:1px solid var(--border);pointer-events:none}
+#sb.on{transform:translateX(0);pointer-events:auto}
+.sh{display:flex;justify-content:space-between;align-items:center;padding:0 12px 10px;border-bottom:1px solid var(--border);margin-bottom:6px}
+.sh span{font-size:.72rem;text-transform:uppercase;color:var(--muted);font-weight:700}
+#sb a{display:block;padding:13px 16px;color:var(--text);text-decoration:none;font-weight:500}
+#sb a:active{color:var(--accent);background:rgba(245,166,35,.1)}
+
+.main{padding:76px 14px 40px;max-width:900px;margin:0 auto}
+.page{display:none}.page.on{display:block}
+.hero{text-align:center;margin-bottom:24px}
+.hero h1{font-size:2rem;font-weight:900;margin-bottom:6px}.hero h1 span{color:var(--accent)}
+.hero p{color:var(--muted);margin-bottom:14px}
+.ip{display:inline-flex;align-items:center;gap:8px;background:var(--card);border:1.5px solid var(--border);border-radius:12px;padding:11px 14px;cursor:pointer}
+.ip b{color:var(--accent);font-size:1.05rem}
+.ip button{background:var(--accent);color:#111;border:none;padding:6px 10px;border-radius:8px;font-weight:700;cursor:pointer}
+
+.h2{font-size:1.15rem;font-weight:800;margin:22px 0 10px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px}
+.ann{border-left:4px solid var(--accent)}
+.meta{display:flex;justify-content:space-between;font-size:.82rem;margin-bottom:4px}
+.meta .a{color:var(--accent);font-weight:700}.meta .d{color:var(--muted)}
+.tag{display:inline-block;font-size:.7rem;font-weight:700;padding:2px 8px;border-radius:10px;margin-bottom:6px;background:rgba(34,197,94,.15);color:#22c55e}
+.tag.im{background:rgba(239,68,68,.15);color:#ef4444}
+.tag.ev{background:rgba(59,130,246,.15);color:#3b82f6}
+
+.avg{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px;margin-bottom:12px}
+.avg .s{font-size:1.8rem;font-weight:900;color:var(--accent)}
+.stars{color:var(--accent)}
+
+.notice{background:rgba(245,166,35,.12);border:1.5px solid var(--accent);border-radius:12px;padding:12px;text-align:center;color:var(--accent);font-weight:600;margin-bottom:14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px}
+.item{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px}
+.item .n{font-weight:800;color:var(--accent)}
+.item .p{font-weight:800;margin:8px 0}
+.item button{width:100%;background:var(--accent);color:#111;border:none;padding:9px;border-radius:8px;font-weight:700;cursor:pointer}
+
+.mhero{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;text-align:center;margin-bottom:16px}
+.mhero h2{color:var(--accent);margin-bottom:6px}
+.rules{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:14px}
+.rule{padding:10px 12px;border-bottom:1px solid var(--border);font-size:.9rem;display:flex;gap:8px}
+.rule:last-child{border-bottom:none}
+.rule b{color:var(--accent);min-width:16px}
+.sec{color:var(--accent);margin:14px 0 8px;font-size:1rem}
+table{width:100%;border-collapse:collapse;font-size:.78rem;margin-top:8px}
+th,td{border:1px solid var(--border);padding:7px;text-align:left}
+th{background:rgba(245,166,35,.12);color:var(--accent)}
+
+.plus{display:flex;align-items:center;justify-content:center;width:50px;height:50px;border-radius:50%;background:var(--accent);color:#111;font-size:1.7rem;font-weight:700;border:none;margin:24px auto 6px;cursor:pointer}
+
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:400;align-items:center;justify-content:center;padding:14px}
+.box{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;width:100%;max-width:360px;position:relative;max-height:90vh;overflow-y:auto}
+.box h2{color:var(--accent);margin-bottom:10px}
+.box .x{position:absolute;top:8px;right:10px;background:none;border:none;color:var(--muted);font-size:1.4rem;cursor:pointer}
+.inp{width:100%;padding:10px;border-radius:8px;border:1.5px solid var(--border);background:var(--bg);color:var(--text);margin-bottom:8px;font-family:inherit}
+.fb{width:100%;padding:10px;border-radius:8px;font-weight:600;border:1.5px solid var(--border);background:transparent;color:var(--text);cursor:pointer;margin-top:4px}
+.fb.ok{background:var(--accent);color:#111;border-color:var(--accent)}
+.ss{display:flex;gap:6px;margin-bottom:10px;font-size:1.4rem}
+.ss span{cursor:pointer;opacity:.3}.ss span.on{opacity:1;color:var(--accent)}
+
+.toast{display:none;position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--card);border:1px solid var(--border);padding:10px 16px;border-radius:10px;font-weight:600;z-index:500}
+.toast.on{display:block}
+footer{text-align:center;padding:20px;color:var(--muted);font-size:.82rem;border-top:1px solid var(--border);margin-top:30px}
+footer a{color:var(--accent);text-decoration:none;font-weight:600}
+</style>
+</head>
+<body>
+
+<div id="loader">
+  <div class="ll">FELIX<span>MC</span></div>
+  <div class="lb"><i></i></div>
+</div>
+<script>setTimeout(function(){var l=document.getElementById('loader');if(l)l.remove()},2000)</script>
+
+<header class="top">
+  <div style="display:flex;align-items:center;gap:8px">
+    <button type="button" class="ib" onclick="openMenu()">☰</button>
+    <div class="logo">FELIX<span>MC</span></div>
+  </div>
+  <div class="ta">
+    <button type="button" class="btn bg" onclick="openModal('mSet')">⚙️</button>
+    <button type="button" class="btn bg" id="btnAcc" onclick="handleAcc()">👤</button>
+    <button type="button" class="btn bp" onclick="go('store')">🛒</button>
+  </div>
+</header>
+
+<div id="ov" onclick="closeMenu()"></div>
+<aside id="sb">
+  <div class="sh"><span>Meniu</span><button type="button" class="ib" onclick="closeMenu()">×</button></div>
+  <a href="#" onclick="go('home');return false">🏠 Pagina Principală</a>
+  <a href="#" onclick="go('ratopia');return false">🐀 Ratopia</a>
+  <a href="#" onclick="go('roleplay');return false">🎭 Roleplay</a>
+  <a href="#" onclick="go('earth');return false">🌍 Earth Towny</a>
+</aside>
+
+<main class="main">
+
+<section class="page on" id="home">
+  <div class="hero">
+    <h1>Felix<span>MC</span> Network</h1>
+    <p>Cel mai bun network românesc</p>
+    <div class="ip" onclick="copyIP()">
+      <span style="color:var(--muted);font-size:.85rem">🌐</span>
+      <b>play.felixmc.ro</b>
+      <button type="button" id="cbtn">Copiază</button>
+    </div>
+  </div>
+
+  <div class="h2">📢 Anunțuri</div>
+  <div id="annList"></div>
+
+  <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-top:8px">
+    <div class="h2" style="margin:0">⭐ Review-uri</div>
+    <button type="button" class="btn bp" onclick="openModal('mRev')">+ Review</button>
+  </div>
+  <div class="avg">
+    <div class="s" id="avgScore">—</div>
+    <div>
+      <div class="stars" id="avgStars"></div>
+      <div style="color:var(--muted);font-size:.85rem" id="avgCount">0 review-uri</div>
+    </div>
+  </div>
+  <div id="revList"></div>
+
+  <button type="button" class="plus" onclick="openAddAnn()">+</button>
+  <div style="text-align:center;color:var(--muted);font-size:.82rem">Adaugă anunț (staff)</div>
+</section>
+
+<section class="page" id="store">
+  <div class="hero"><h1>🛒 Store</h1></div>
+  <div class="notice">⚠️ Toate tranzacțiile se fac pe Discord</div>
+  <div class="grid">
+    <div class="item"><div class="n">⭐ VIP</div><div style="color:var(--muted);font-size:.82rem;margin-top:4px">Prefix, kit zilnic</div><div class="p">15 RON</div><button type="button" onclick="buy()">Cumpără pe Discord</button></div>
+    <div class="item"><div class="n">💎 MVP</div><div style="color:var(--muted);font-size:.82rem;margin-top:4px">VIP + kit special</div><div class="p">30 RON</div><button type="button" onclick="buy()">Cumpără pe Discord</button></div>
+    <div class="item"><div class="n">👑 LEGEND</div><div style="color:var(--muted);font-size:.82rem;margin-top:4px">Cel mai înalt rank</div><div class="p">50 RON</div><button type="button" onclick="buy()">Cumpără pe Discord</button></div>
+    <div class="item"><div class="n">🎁 Kit Starter</div><div style="color:var(--muted);font-size:.82rem;margin-top:4px">Armură + unelte</div><div class="p">5 RON</div><button type="button" onclick="buy()">Cumpără pe Discord</button></div>
+    <div class="item"><div class="n">⚔️ Kit Warrior</div><div style="color:var(--muted);font-size:.82rem;margin-top:4px">Full diamant</div><div class="p">12 RON</div><button type="button" onclick="buy()">Cumpără pe Discord</button></div>
+    <div class="item"><div class="n">🗝️ Crate Key ×5</div><div style="color:var(--muted);font-size:.82rem;margin-top:4px">5 chei</div><div class="p">10 RON</div><button type="button" onclick="buy()">Cumpără pe Discord</button></div>
+    <div class="item"><div class="n">🏠 +5 Homes</div><div style="color:var(--muted);font-size:.82rem;margin-top:4px">Mai multe sethome</div><div class="p">8 RON</div><button type="button" onclick="buy()">Cumpără pe Discord</button></div>
+    <div class="item"><div class="n">✨ Particule</div><div style="color:var(--muted);font-size:.82rem;margin-top:4px">Aura / trail</div><div class="p">7 RON</div><button type="button" onclick="buy()">Cumpără pe Discord</button></div>
+    <div class="item"><div class="n">🐦 Fly 30 zile</div><div style="color:var(--muted);font-size:.82rem;margin-top:4px">/fly 30 zile</div><div class="p">20 RON</div><button type="button" onclick="buy()">Cumpără pe Discord</button></div>
+    <div class="item"><div class="n">📦 Bundle</div><div style="color:var(--muted);font-size:.82rem;margin-top:4px">VIP + Kit + Keys</div><div class="p">22 RON</div><button type="button" onclick="buy()">Cumpără pe Discord</button></div>
+  </div>
+</section>
+
+<section class="page" id="ratopia">
+  <div class="mhero">
+    <h2>🐀 Ratopia</h2>
+    <p>Explorează, construiește și domină</p>
+    <button type="button" class="btn bp" onclick="copyIP()">📋 Copiază IP & Joacă</button>
+  </div>
+
+  <h3 class="sec">⚖️ I. Principii generale</h3>
+  <div class="rules">
+    <div class="rule"><b>1.</b> Respectul e legea supremă. Niciun jucător nu e mai presus. Insultă, discriminare, hărțuire sau batjocură = interzis.</div>
+    <div class="rule"><b>2.</b> Roleplay-ul > câștigul. Scopul e povestea, nu dominația. Fii creativ, nu toxic.</div>
+  </div>
+
+  <h3 class="sec">⚔️ III. Roleplay – reguli de joc</h3>
+  <div class="rules">
+    <div class="rule"><b>1.</b> Acțiuni între *asteriscuri*. Vorbire între ghilimele.</div>
+    <div class="rule"><b>2.</b> Fără powerplay: nu controla acțiunile altuia fără acord.</div>
+    <div class="rule"><b>3.</b> Fără metagaming: info din afara RP nu se folosesc în joc.</div>
+    <div class="rule"><b>4.</b> Fără godmodding: nu fii nemuritor.</div>
+    <div class="rule"><b>5.</b> Respectă timpul și logica.</div>
+  </div>
+
+  <h3 class="sec">🧱 IV. Anti-Grief & Conduită</h3>
+  <div class="rules">
+    <div class="rule"><b>1.</b> Griefing-ul este interzis.</div>
+    <div class="rule"><b>2.</b> Furtul în afara contextului RP = sancțiune.</div>
+    <div class="rule"><b>3.</b> Raid-urile doar cu aprobare moderator.</div>
+    <div class="rule"><b>4.</b> Spam, flood, trolling – interzise.</div>
+    <div class="rule"><b>5.</b> Exploit / duplicare iteme – exil permanent.</div>
+  </div>
+
+  <h3 class="sec">⛏️ VI. Economia</h3>
+  <div class="rules">
+    <div class="rule"><b>•</b> Moneda: galbeni</div>
+    <div class="rule"><b>•</b> Comerțul e liber, taxele se stabilesc de liderii locali.</div>
+    <div class="rule"><b>•</b> Obiectele rare trebuie aprobate de un moderator.</div>
+  </div>
+
+  <h3 class="sec">🚫 VII. Abateri & Sancțiuni</h3>
+  <div style="overflow-x:auto">
+    <table>
+      <tr><th>Abatere</th><th>Prima</th><th>A doua</th><th>A treia</th></tr>
+      <tr><td>Limbaj toxic</td><td>Avertisment</td><td>Mute 24h</td><td>Exil</td></tr>
+      <tr><td>Powerplay / Godmodding</td><td>Avertisment RP</td><td>Reset RP</td><td>Exil</td></tr>
+      <tr><td>Grief</td><td>Suspend 48h</td><td>Reset progres</td><td>Exil</td></tr>
+      <tr><td>Exploit</td><td>Exil permanent</td><td>–</td><td>–</td></tr>
+      <tr><td>Furt OOC</td><td>Returnare + Avertisment</td><td>Suspend 48h</td><td>Exil</td></tr>
+      <tr><td>Spam / Troll</td><td>Mute 12h</td><td>Mute 48h</td><td>Exil</td></tr>
+    </table>
+  </div>
+</section>
+
+<section class="page" id="roleplay">
+  <div class="mhero">
+    <h2>🎭 Roleplay</h2>
+    <p>Creează-ți povestea</p>
+    <button type="button" class="btn bp" onclick="copyIP()">📋 Copiază IP & Joacă</button>
+  </div>
+  <div class="rules">
+    <div class="rule"><b>1.</b> Rămâi în personaj (IC).</div>
+    <div class="rule"><b>2.</b> Nu RDM / VDM.</div>
+    <div class="rule"><b>3.</b> Respectă joburile.</div>
+    <div class="rule"><b>4.</b> Nu meta-game.</div>
+    <div class="rule"><b>5.</b> Fără powergaming.</div>
+    <div class="rule"><b>6.</b> Fear RP obligatoriu.</div>
+  </div>
+</section>
+
+<section class="page" id="earth">
+  <div class="mhero">
+    <h2>🌍 Earth Towny</h2>
+    <p>Harta reală + Towny</p>
+    <button type="button" class="btn bp" onclick="copyIP()">📋 Copiază IP & Joacă</button>
+  </div>
+  <div class="rules">
+    <div class="rule"><b>1.</b> Respectă granițele.</div>
+    <div class="rule"><b>2.</b> Nu claim peste alții.</div>
+    <div class="rule"><b>3.</b> Războaiele se declară oficial.</div>
+    <div class="rule"><b>4.</b> Fără grief în afara războiului.</div>
+    <div class="rule"><b>5.</b> Alianțele se anunță public.</div>
+    <div class="rule"><b>6.</b> Fără alt-uri.</div>
+  </div>
+</section>
+</main>
+
+<div class="modal" id="mSet">
+  <div class="box">
+    <button type="button" class="x" onclick="closeModal('mSet')">×</button>
+    <h2>⚙️ Setări</h2>
+    <button type="button" class="fb" onclick="setTheme('dark')">🌙 Dark</button>
+    <button type="button" class="fb" onclick="setTheme('light')">☀️ Light</button>
+    <button type="button" class="fb" onclick="setTheme('nether')">🔥 Nether</button>
+    <button type="button" class="fb" onclick="shareSite()" style="margin-top:8px">🔗 Share site</button>
+  </div>
+</div>
+
+<div class="modal" id="mLogin">
+  <div class="box">
+    <button type="button" class="x" onclick="closeModal('mLogin')">×</button>
+    <h2>👤 Login (Cracked)</h2>
+    <input class="inp" id="loginUser" placeholder="Username Minecraft" maxlength="16">
+    <button type="button" class="fb ok" onclick="doLogin()">Intră</button>
+  </div>
+</div>
+
+<div class="modal" id="mAcc">
+  <div class="box">
+    <button type="button" class="x" onclick="closeModal('mAcc')">×</button>
+    <h2>Cont</h2>
+    <p>Logat ca: <strong id="accName"></strong></p>
+    <button type="button" class="fb" onclick="logout()">Deconectare</button>
+  </div>
+</div>
+
+<div class="modal" id="mPass">
+  <div class="box">
+    <button type="button" class="x" onclick="closeModal('mPass')">×</button>
+    <h2>🔒 Parolă Staff</h2>
+    <input class="inp" id="annPass" type="password" placeholder="Parolă">
+    <button type="button" class="fb ok" onclick="checkPass()">Confirmă</button>
+  </div>
+</div>
+
+<div class="modal" id="mAnn">
+  <div class="box">
+    <button type="button" class="x" onclick="closeModal('mAnn')">×</button>
+    <h2>📢 Anunț nou</h2>
+    <textarea class="inp" id="annText" rows="3" placeholder="Text anunț..."></textarea>
+    <select class="inp" id="annTag">
+      <option value="update">Update</option>
+      <option value="event">Eveniment</option>
+      <option value="important">Important</option>
+    </select>
+    <button type="button" class="fb ok" onclick="publishAnn()">Publică</button>
+  </div>
+</div>
+
+<div class="modal" id="mRev">
+  <div class="box">
+    <button type="button" class="x" onclick="closeModal('mRev')">×</button>
+    <h2>⭐ Review</h2>
+    <input class="inp" id="revName" placeholder="Numele tău" maxlength="20">
+    <div class="ss" id="starsBox">
+      <span onclick="setStars(1)">★</span>
+      <span onclick="setStars(2)">★</span>
+      <span onclick="setStars(3)">★</span>
+      <span onclick="setStars(4)">★</span>
+      <span onclick="setStars(5)">★</span>
+    </div>
+    <textarea class="inp" id="revText" rows="3" placeholder="Părerea ta..."></textarea>
+    <button type="button" class="fb ok" onclick="publishRev()">Trimite</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<footer>© 2026 FelixMC Network · <a href="https://discord.gg/4cbvMaGBeb" target="_blank">Discord</a></footer>
+
+<script>
+function toast(m){var t=document.getElementById('toast');t.textContent=m;t.className='toast on';setTimeout(function(){t.className='toast'},2000)}
+function openModal(id){document.getElementById(id).style.display='flex'}
+function closeModal(id){document.getElementById(id).style.display='none'}
+function openMenu(){document.getElementById('sb').classList.add('on');document.getElementById('ov').style.display='block'}
+function closeMenu(){document.getElementById('sb').classList.remove('on');document.getElementById('ov').style.display='none'}
+function go(id){
+  closeMenu();
+  var p=document.querySelectorAll('.page');
+  for(var i=0;i<p.length;i++) p[i].classList.remove('on');
+  document.getElementById(id).classList.add('on');
+  window.scrollTo(0,0);
+}
+function setTheme(t){
+  document.body.classList.remove('light','nether');
+  if(t==='light') document.body.classList.add('light');
+  if(t==='nether') document.body.classList.add('nether');
+  localStorage.setItem('felix-theme',t);
+}
+(function(){var t=localStorage.getItem('felix-theme')||'dark';if(t==='light')document.body.classList.add('light');if(t==='nether')document.body.classList.add('nether')})();
+function shareSite(){
+  try{if(navigator.clipboard)navigator.clipboard.writeText('https://felixmc.vercel.app')}catch(e){}
+  toast('Link copiat: felixmc.vercel.app');
+  closeModal('mSet');
+}
+function copyIP(){
+  try{if(navigator.clipboard)navigator.clipboard.writeText('play.felixmc.ro')}catch(e){}
+  var b=docum.btn-primary:hover{filter:brightness(1.08);transform:translateY(-1px)}
 .icon-btn{width:42px;height:42px;border-radius:11px;background:transparent;border:1.5px solid var(--border);color:var(--accent);font-size:1.2rem;display:flex;align-items:center;justify-content:center;transition:.2s;cursor:pointer}
 .icon-btn:hover{background:var(--accent-soft);border-color:var(--accent)}
 
